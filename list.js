@@ -1,6 +1,7 @@
 if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
   var S3BL_IGNORE_PATH = false;
 }
+var pathname = window.location.pathname;
 
 jQuery(function($) {
   var s3_rest_url = createS3QueryUrl();
@@ -83,6 +84,7 @@ function getInfoFromS3Data(xml) {
     files: files,
     directories: directories,
     prefix:  $(xml.find('Prefix')[0]).text()
+    nextmarker: $(xml.find('NextMarker')[0]).text()
   }
 }
 
@@ -94,7 +96,7 @@ function getInfoFromS3Data(xml) {
 // } 
 function renderTable(info) {
   var files = info.files.concat(info.directories)
-    , prefix = info.prefix
+    , prefix = info.prefix, nextmarker = info.nextmarker
     ;
   var cols = [ 45, 30, 15 ];
   var content = [];
@@ -133,7 +135,7 @@ function renderTable(info) {
     content.push(row + '\n');
   });
 
-  document.getElementById('listing').innerHTML = '<pre>' + content.join('') + '</pre>';
+  document.getElementById('listing').innerHTML = '<pre>' + content.join('') + '</pre>'+'<a href="' + pathname + '">Next Page</a>';
 }
 
 function renderRow(item, cols) {
